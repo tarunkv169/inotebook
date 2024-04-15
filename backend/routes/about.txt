@@ -1,0 +1,5 @@
+routes---it to used to create api(Application programming interface -> it is used to make iteraction between different applications (like- The API is like the waiter who takes your order, communicates it to the chef, and brings your food back to you.} )
+      
+      ----const User = require('../models/User');    ------importing "User" schema
+      --- const user = User(req.body);          ------creating database "user"    and   ------using "User" schema getting(posting) the request form user
+           user.save()                          -------saving req in db 
