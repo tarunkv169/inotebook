@@ -4,6 +4,11 @@ const express = require('express');
 const User = require('../models/User');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');        // 1. npm install express-validator  2. this line
+const bcrypt = require('bcrypt');
+var jwt = require('jsonwebtoken');
+
+
+const JWT_SECRET ='tarunisagoodbody';
 
 
 // router.post('/', (req, res) => {
@@ -47,12 +52,26 @@ router.post('/createuser', [
         {
           return res.status(400).json({error: 'sorry user with this email already exists'})
         }
-
+        
+        const salt = await bcrypt.genSalt(10);
+        const rbp = await bcrypt.hash(req.body.password,salt);
         user = await User.create({
               name: req.body.name,                                                                     
               email: req.body.email,
-              password: req.body.password,
+              password: rbp,
             })
+
+        const data={
+          user:{
+            id: user.id
+          }
+        }
+
+        const authtoken = jwt.sign(data,JWT_SECRET);
+
+      res.json(authtoken);
+        // res.json(user);
+        // res.json(rbp);
     }
     catch(error){
            console.error(error.message)
