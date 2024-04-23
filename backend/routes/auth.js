@@ -10,6 +10,8 @@ var jwt = require('jsonwebtoken');
 
 const JWT_SECRET ='tarunisagoodbody';
 
+const fetchuser = require("../middleware/fetchuser");
+
 
 // router.post('/', (req, res) => {
 //     console.log(req.body);
@@ -20,7 +22,7 @@ const JWT_SECRET ='tarunisagoodbody';
 
 
 
-// 1️⃣CREATE THE USER USING : POST "/api/auth/createuser"   no login required
+//ROUTES1️⃣     CREATE THE USER USING : POST "/api/auth/createuser"   no login required
 
 router.post('/createuser', [ 
     body('name','enter a valid name').isLength({ min: 3 }),                                   //3. check invalidity
@@ -85,9 +87,8 @@ router.post('/createuser', [
 
 
 
-
-    //2️⃣AUTHENTICATE A USER(i.e user put its email and password,,,,the backend will check he put write email or password that he has login in this app) 
-    //           USING : Post "/api/auth/login" 
+//ROUTES2️⃣     AUTHENTICATE A USER(i.e user put its email and password,,,,the backend will check he put write email or password that he has login in this app) 
+    //           USING : Post "/api/auth/login"  no login required
     router.post('/login',[
       body('email','invalid email').isEmail(),
       body('password','password must containe atleast 5 characters').isLength({min: 5})
@@ -133,6 +134,28 @@ router.post('/createuser', [
 });
 
 
+
+
+
+//ROUTES3️⃣    GET LOGGEDIN USER DETAILS USIGN : post "/api/auth/getuser"  login required
+
+router.post('/getuser',fetchuser,
+
+   async (req,res)=>{
+     
+     try{
+         const userid = req.user.id;
+         const user = await User.findById(userid).select("-password");
+
+         res.send(user);
+    }
+    catch(error){
+      console.log(error.message);
+      res.status(500).json("Internal server error");
+    }
+
+
+})
 
 
 module.exports = router;
