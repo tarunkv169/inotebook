@@ -144,8 +144,8 @@ router.post('/getuser',fetchuser,
    async (req,res)=>{
      
      try{
-         const userid = req.user.id;
-         const user = await User.findById(userid).select("-password");
+         const userid = req.user.id;                    // we fetched userid from authtoken in fetchuser func
+         const user = await User.findById(userid).select("-password");     // give user id to user var dont the password
 
          res.send(user);
     }
