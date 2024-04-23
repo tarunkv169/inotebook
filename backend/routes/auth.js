@@ -20,7 +20,7 @@ const JWT_SECRET ='tarunisagoodbody';
 
 
 
-// CREATE THE USER USING : POST "/api/auth/createuser"   no login required
+// 1️⃣CREATE THE USER USING : POST "/api/auth/createuser"   no login required
 
 router.post('/createuser', [ 
     body('name','enter a valid name').isLength({ min: 3 }),                                   //3. check invalidity
@@ -69,16 +69,70 @@ router.post('/createuser', [
 
         const authtoken = jwt.sign(data,JWT_SECRET);
 
-      res.json(authtoken);
+        res.json({authtoken});
         // res.json(user);
         // res.json(rbp);
     }
     catch(error){
            console.error(error.message)
-           res.status(500).send("some error has occured");
+           res.status(500).send("Interval server error");
     }
 
+  });
+
+
+
+
+
+
+
+    //2️⃣AUTHENTICATE A USER(i.e user put its email and password,,,,the backend will check he put write email or password that he has login in this app) 
+    //           USING : Post "/api/auth/login" 
+    router.post('/login',[
+      body('email','invalid email').isEmail(),
+      body('password','password must containe atleast 5 characters').isLength({min: 5})
+    ],
+    async (req,res)=>{
+
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+  
+
+      const {email,password} = req.body;              //⬇️ on body window ,we req user's email & password and store that  in var(email,password)
+      try{
+         const user = await User.findOne({email});                              // ➡️find the email
+         if(!user)                                                              // if this email not exits
+         {
+             return res.status(400).json({error: "please enter the correct login credentials"});
+         }
+          
+         const password_compare = await bcrypt.compare(password,user.password); // ➡️compare the password by bcrpyting from salt 
+         if(!password_compare)                                                  // if password not exits
+         {
+            return res.status(400).json({error: "please enter the correct login credentials"});
+         }
+         
+         const data={
+          user:{
+              id: user.id
+          }
+         }
+
+         const authtoken = jwt.sign(data,JWT_SECRET);
+        
+         res.json({authtoken});
+         
+      }
+      catch(error){
+           console.error(error.message);
+           res.status(500).send('Interval server error');
+      }
 
 });
+
+
+
 
 module.exports = router;
