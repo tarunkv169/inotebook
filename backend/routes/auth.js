@@ -137,9 +137,9 @@ router.post('/createuser', [
 
 
 
-//ROUTES3️⃣    GET LOGGEDIN USER DETAILS USIGN : post "/api/auth/getuser"  login required
+//ROUTES3️⃣    GET LOGGEDIN USER DETAILS USIGN : post "/api/auth/getuser"  login required(i.e in header auth_token is must)
 
-router.post('/getuser',fetchuser,
+router.post('/getuser',fetchuser,          //this fetchuser func is used in any routes file to get user details "dont forget to import it above"
 
    async (req,res)=>{
      
