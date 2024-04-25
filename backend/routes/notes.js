@@ -46,36 +46,68 @@ router.post('/add_note',fetchuser,[
  })
 
 
- //ROUTES2️⃣ Update existing notes using : Put "/update/:id" login required
+ //ROUTES3️⃣ Update existing notes using : Put "/update/:id" login required
  router.put('/update/:id',fetchuser,
  async (req,res)=>{
      
     //getting updation from user
     let {title,description,tag}= req.body;   
     
-    //adding updation in newnote
-    let newnote = {};
-    if(title){newnote.title = title};
-    if(description){newnote.description = description};
-    if(tag){newnote.tag = tag};
+    try{  
+        //adding updation in newnote
+        let newnote = {};
+        if(title){newnote.title = title};
+        if(description){newnote.description = description};
+        if(tag){newnote.tag = tag};
 
-    //getting note(which is to be update) from users id(from/update/"id") who is updating
-    let note = await Notes.findById(req.params.id);
-    if(!note){ return res.status(404).send("NOT found")}
+        //getting note(which is to be update) from users id(from/update/"id") who is updating
+        let note = await Notes.findById(req.params.id);
+        if(!note){ return res.status(404).send("NOT found")}
 
-    //checking note(which is to be update) is updating by correct user ((   note.user.toString() --> give id of note's user  and  req.user.id ----> gives id of login user   ||| now here is checking this match or not))
-    if(note.user.toString()!==req.user.id)
-    {
-        return res.status(404).send("NOT Allowed");
-    }
+        //checking note(which is to be update) is updating by correct user ((   note.user.toString() --> give id of note's user  and  req.user.id ----> gives id of login user   ||| now here is checking this match or not))
+        if(note.user.toString()!==req.user.id)
+        {
+            return res.status(404).send("NOT Allowed");
+        }
     
-    // if all set,then updating the existing note
-    note = await Notes.findByIdAndUpdate(req.params.id,{$set: newnote},{new:true})
+        // if all set,then updating the existing note
+        note = await Notes.findByIdAndUpdate(req.params.id,{$set: newnote},{new:true})
 
-    res.json({note});
-
+        res.json({note});
+    }
+    catch(error){
+        console.error(res.message);
+        res.status(401).json("Internal server error");
+    }
 
  })
 
+
+ //ROUTES4️⃣ deleting existing notes using : delete "/delete_note/:id" login required
+ router.delete('/delete_note/:id',fetchuser,
+  async (req,res)=>{
+
+    try{
+        // jis note ko delete krna hai usko uski id se uthaya
+        let note = await Notes.findById(req.params.id);
+        if(!note){return res.status(404).send("NOT found")};
+
+        //abh is note ka user hai ---kya wo same hai---jo user isse delete kr raha hai
+        if(note.user.toString()!==req.user.id)
+        {
+            return res.status(404).send("NOT allowed");
+        }
+
+        //if all set,then delete note
+        note = await Notes.findByIdAndDelete(req.params.id);
+    
+        res.json({note});
+    }
+    catch(error){
+        console.error(res.message);
+        res.status(401).json("Internal server error");
+    }
+
+  })
 
 module.exports = router;
