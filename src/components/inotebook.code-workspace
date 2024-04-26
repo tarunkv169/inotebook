@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../newsapp"
+		},
+		{
+			"path": "../../../TextUtils-React"
+		}
+	],
+	"settings": {}
+}
