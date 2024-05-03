@@ -1,0 +1,11 @@
+                                                    1️⃣creating notecontext
+                                                             |
+                                                             |
+                                                            / \
+4️⃣goes to component(which want to use this context)  <<<<<<     >>>>>>>>>>   2️⃣goes to Notestate
+            like(about.js want to use)                                               |
+                   |                                                                 |
+                   |                                                                 |
+        it can use this context(state) using usecontext()                             \
+        and can use (changing state)(setstate) using useeffect()                        >>>>>>>>>>>>> 3️⃣goes to App.js (in return around <router>)
+                                                                                       
