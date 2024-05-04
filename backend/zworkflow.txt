@@ -1,0 +1,95 @@
+1️⃣create react app ----------npx create-react-app inotebook
+2️⃣created a backend folder in inotebook folder and open this folder in vs and open terminal
+3️⃣run commands in terminal backend> npm init -------------> package name(inotebook-backend) and enter and write description and enter and ok 
+                                   > npm install express
+                                   > npm install mongoose
+
+4️⃣now to push all on github -------> 1. in "gitingnore" remove "/" from node_modules-----> this will help not to upload nodemodules on git
+
+5️⃣now create files---->(db.js) -------->connect with mongodb database(with that database URI)
+                        (index.js)------->using "connected_to_mongodb" func it will create endpoints ----for connection of fronted and backend-----------> use express
+
+6️⃣                     backend> npm install -D nodemon
+                              > nodemon index.js
+
+7️⃣now create folder -----> models("for Schema of our database") ----->(User.js) and (Notes.js)----------> use the mongoose
+8️⃣now create folder -----> routes("for creating apis")--------------->(auth.js) and (notes.js)----------> use the express
+9️⃣now we will store data into database(of mongodbcompass) from vs in (auth.js) 
+                              --> use app.use(express.json()); in (indexjs)
+                              --> do setting in thunder client to do the request from there-----> add "content-type" in header and "get to post"
+
+                              --> we will store data of "a user" in our database by creating user in auth.js
+                              -->ROUTES1️⃣  CREATE THE USER USING : POST "/api/auth/createuser"   no login required
+
+                                     ---> use UserSchema
+                                     ---> const user = User(req.body);
+                                     ---> user.save() 
+                                     --->now to do validation on our requested data
+                                            --->for to restrict invalid input 
+                                                --->npm install --save express-validator
+                                                --->const { body, validationResult } = require('express-validator');
+                                                --->router.post(  '/',  [body('','').isLength({min:3}),...,...]  ,(req,res)=>{  https://express-validator.github.io/docs/6.12.0/   })
+                                            --->for to avoid duplicay
+                                                ---> we are creating user ,so in UserSchema ----> at last do "const User = mongoose.model('user',UserSchema)"  "User.createIndexes()"  "module.exports = User"
+                                                ---> add inotebook in URI    
+
+🔟now instead of "createIndexes" we will remove duplicay using "findOne"------------>remove createIndexes form UserSchema
+                                                                                    >do async to (req,res)   and    await to User.findOne
+                                                                                    >put this in try {let user = await User.findOne({email: req.body.email})  if user exits then  return res.status(400).json({error: '....'}))
+                                                                                    >put error in catch {.....)
+                                                                                    >in index.js do port 5000 so on 3000 our react app will run 
+
+1️⃣1️⃣ create thunderclient collections
+1️⃣2️⃣ understand hashing,salt and pepper to avoid hacking of our data from database----> node.js contain inbuilt "bcrypt package" which contain gensalt  https://youtu.be/inEhzp3nD0M?si=ZeFgqLbR_sUF3MND
+                                                                                   ---->npm install bcrypt
+                                                                                   ---->import package in auth.js "const bcrypt = require('bcrypt');"
+                                                                                   ----> then make variables for  "salt"      and   "hashing between password and salt" 
+                                                                                                            ---->   const salt = await bcrypt.genSalt(10);
+                                                                                                                    const rbp = await bcrypt.hash(req.body.password,salt);
+                                                                                                                    user = await User.create({
+                                                                                                                          name: req.body.name,                                                                     
+                                                                                                                          email: req.body.email,
+                                                                                                                          password: rbp,
+                                                                                                                        }) 
+
+                                                                                   -----> jsonwebtoken is given in return of login to authenticate on next login to check it is same user or not
+                                                                                         ----->"npm install jsonwebtoken"
+                                                                                         ----->to study this and signature(main endpoint for verificatio) "jwt.io"
+                                                                                         ----->in auth.js---->import jsonwebtoken                       "var jwt = require('jsonwebtoken');"
+                                                                                                         ---->create var for secret token               "const JWT_SECRET='';"
+                                                                                                         ---->take data best suited for token creation  "const data={user:{id: user.id}}"
+                                                                                                         ---->sign the "data" with "JWT_SECRET"         "const authtoken=jwt.sign(data,JWT_SECRET)"
+                                                                                                         ---->show authtoken on res bar                 "res.json({authtoken})"
+
+
+1️⃣3️⃣  ROUTES2️⃣AUTHENTICATE A USER(i.e user put its email and password,,,,the backend will check he put write email or password that he has login in this app) 
+    //           USING : Post "/api/auth/login" 
+                                   --->//⬇️ on body window ,we req user's email & password and store that  in var(email,password)   "const {email,password}= req.body"
+                                   --->//➡️find the email                                                                          "const user = await User.findOne({email});"     
+                                                         ----> if email not exit then show error
+                                   --->//➡️compare the password by bcrpyting from salt                                             "const password_compare = await bcrypt.compare(password,user.password);"
+                                                         ----> if password_compare not exit then show error
+
+1️⃣4️⃣  ROUTES3️⃣GET LOGGEDIN USER DETAILS USIGN : post "/api/auth/getuser"  login required
+                ---> created a folder "middleware"  --->  in which file "fetchuser.js"  --->  which contain "fetchuser func"   ------>   this fetchuser func is used in any routes file to get user details "dont forget to import it above"
+                                                                                                 ---> we took requested token from header of thunderclient      "const token = req.header("auth_token");"
+                                                                                                 ---> if not a token then then show error
+                                                                                                 ---> in try(verify token with jwt_secret_key; // if it is then store in data)  "const data = jwt.verify(token,JWT_SECRET)"
+                                                                                                 ---> data saved in req     "req.user = data.user"
+                                                                                                 ---> next describe our (req,res) of route in which our fetchuser func will be used  "next()"
+                 
+1️⃣5️⃣ in notes.js file
+       --->//ROUTES1️⃣ FETCH/GET ALL NOTES OF PARTICULAR USER USING : GET "/api/notes/fetch_notes" login required(i.e in header auth_token is must and content type)
+              -->async and await banana mtt bhulna and fetchuser will be used here
+              -->Notes find karo konse user ke hain (🛑now in Notes schema we have to define user)  "const notes = await Notes.find({user: req.user.id});"  and  in Notes schema user:{
+                                                                                                                                                                                      type: mongoose.Schema.Types.ObjectId,
+                                                                                                                                                                                      ref: 'user'
+                                                                                                                                                                                   },
+        
+        --->//ROUTES2️⃣ Add a new notes using : Post "/api/notes/add_note" login required
+                -->//applied the validator for title and description
+                --->//same show the error if not validation
+                --->get the user content form body where requested   "const {title,description,tag}=req.body;"
+                --->created note of that related to particular user   "const note = new Notes({title,description,tag,user: req.user.id})"
+                --->saved that note                                    "const saved_note = await note.save()"
+            
