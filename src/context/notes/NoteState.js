@@ -109,7 +109,45 @@ const NoteState=(props)=>{
   
   
   
+      
+
+             //delete the note
+       const deletenote = async (id) => 
+       {
+         try {
   
+            //📅📅📅📅this is to delete(DELETE) ON database📅
+            const response = await fetch(`${head}/api/notes/delete_note/${id}`, {
+            method: "DELETE",
+            headers: {
+                     "Content-Type": "application/json",
+                     "auth_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjYyNzc1NDUzMGQxODNkYWQ5NjE3ZjA1In0sImlhdCI6MTcxNDg5OTQzOH0.aE6IZiaBHvsaizMlz7XtpqFVXLQc3SBRmBInq1jSVzg"
+                     }
+            });
+      
+            if (!response.ok) 
+            {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+  
+            const json = await response.json();
+            console.log("Deleting note", json);
+  
+  
+  
+  
+            //🖼️🖼️🖼️🖼️this is to show on (UI) deleted data🖼️
+            const newNotes = notes.filter((note) => note._id !== id);
+            setNotes(newNotes);
+  
+  
+         } 
+         catch(error)
+         {
+           console.error("Error deleting note:", error);
+         }
+  
+      };
   
 
 
@@ -122,7 +160,7 @@ const NoteState=(props)=>{
 
 
       return(                                                     // 2️⃣.5️⃣ passing which we   initialize,define in   (VALUE) to use by  (others) -----------> go to Note.js(2️⃣.6️⃣)---------->
-            <noteContext.Provider value={{notes,setNotes,getnote,addnote}}>     
+            <noteContext.Provider value={{notes,setNotes,getnote,addnote,deletenote}}>     
                  {props.children}
             </noteContext.Provider>
       )
