@@ -1,7 +1,13 @@
 import React from 'react'
+import Note from './Note'
 
-export default function Home() {
+function Home(){
   return (
-    <div>H</div>
+    <div>
+      <Note/>
+    </div>
   )
 }
+
+
+export default Home;
