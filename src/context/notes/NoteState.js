@@ -86,23 +86,16 @@ const NoteState=(props)=>{
                body: JSON.stringify({title,description,tag})
            });
   
-              const json = await response.json();
-              console.log(json);
-  
-  
-  
+           
+           
+           
+           
            //🖼️🖼️🖼️🖼️this is to show on (UI) added data🖼️
-           const note={
-                   "_id": `"${id}"`,
-                   "user": "6627754530d183dad9617f05",
-                   "title": title,
-                   "description": description,
-                   "tag": tag,
-                   "date": "2024-05-04T11:39:52.050Z",
-                   "__v": 0
-                 }
-  
-            setNotes(notes.concat(note));
+           
+                const note = await response.json();
+                setNotes(notes.concat(note)); // Using callback form of setNotes to ensure we have the latest state
+           
+           
   
         }
   
@@ -166,7 +159,7 @@ const NoteState=(props)=>{
          console.log(json);
          
          
-         const newnotes = JSON.parse(JSON.stringify(notes));             //8️⃣.🔟 to show in UI---do JSON.parse of JSON.stringify of notes---8️⃣.🔟.1️⃣then apply loop to match id of all notes if match then change title,des,tag---then break------8️⃣.🔟.2️⃣setNotes(newnotes)
+         let newnotes = JSON.parse(JSON.stringify(notes));             //8️⃣.🔟 to show in UI---do JSON.parse of JSON.stringify of notes---8️⃣.🔟.1️⃣then apply loop to match id of all notes if match then change title,des,tag---then break------8️⃣.🔟.2️⃣setNotes(newnotes)
 
          for(let index=0; index<newnotes.length; index++)
           {  const element = newnotes[index];
@@ -180,7 +173,7 @@ const NoteState=(props)=>{
               }
           }
 
-          setNotes(newnotes)
+          setNotes(newnotes);
 
       }
 
