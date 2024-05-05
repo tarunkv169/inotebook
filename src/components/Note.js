@@ -25,14 +25,15 @@ export default function Note() {
 
 
 
-    const [note,setNote] = useState({etitle:"",edescription:"",etag:""});  //8️⃣.4️⃣.1️⃣ initialize with empty 
-
+    
     const ref = useRef(null);
     const refClose = useRef(null);
-    const updatenote=(currentnote)=>{   //8️⃣.4️⃣--- ⬆️-(8️⃣.4️⃣.1️⃣)---when edit icon click this func will run and setNote(with currentdata of editing note)
-        
-        setNote({etitle: currentnote.title, edescription: currentnote.description, etag: currentnote.tag, id: currentnote._id})
+    const [note,setNote] = useState({etitle:"",edescription:"",etag:"",id:""});  //8️⃣.4️⃣.1️⃣ initialize with empty 
+    let updatenote=(currentnote)=>{   //8️⃣.4️⃣--- ⬆️-(8️⃣.4️⃣.1️⃣)---when edit icon click this func will run and setNote(with currentdata of editing note)
+    
         ref.current.click();            //8️⃣.5️⃣---useref of current define (in className="btn btn-primary d-none" do ref={ref}) and (outer do const ref= useRef(null))
+        setNote({etitle: currentnote.title,edescription: currentnote.description, etag: currentnote.tag, id: currentnote._id})
+
     }
 
 
@@ -41,7 +42,7 @@ export default function Note() {
     }
 
 
-    const updateclick=(currentnote)=>{   //8️⃣.7️⃣---onClick--call--editnote()--with parameter of edited note to save in database and show on UI
+    const updateclick=(e)=>{   //8️⃣.7️⃣---onClick--call--editnote()--with parameter of edited note to save in database and show on UI
         editnote(note.etitle , note.edescription , note.etag , note.id)
         refClose.current.click();        //8️⃣.8️⃣---(in close button ref={refClose}) and (outer do const refClose= useRef(null))------------------->8️⃣.9️⃣go to NoteState.js---->
     }
@@ -73,22 +74,22 @@ export default function Note() {
                <form>
                    <div className="mb-3 my-4">
                        <label htmlFor="etitle" className="form-label">title</label>
-                       <input type="text" className="form-control" id="etitle" name='etitle'  onChange={handlechange} />
+                       <input type="text" className="form-control" id="etitle" name='etitle' value={note.etitle} onChange={handlechange} minLength={5} required/>
                    </div>
                    <div className="mb-3">
                        <label htmlFor="edescription" className="form-label">description</label>
-                       <input type="text" className="form-control" id="edescription" name='edescription' onChange={handlechange} />
+                       <input type="text" className="form-control" id="edescription" name='edescription'value={note.edescription} onChange={handlechange} minLength={5} required/>
                    </div>
                    <div className="mb-3">
                        <label htmlFor="etag" className="form-label">tag</label>
-                       <input type="text" className="form-control" id="etag" name='etag' onChange={handlechange} />
+                       <input type="text" className="form-control" id="etag" name='etag'value={note.etag} onChange={handlechange} minLength={5} required/>
                    </div>
   
                </form>
             </div>
             <div className="modal-footer">
               <button ref={refClose} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" className="btn btn-primary" onClick={updateclick}>Update Notes</button>
+              <button disabled={note.etitle.length<5 || note.edescription.length<5}type="button" className="btn btn-primary" onClick={updateclick} >Update Notes</button>
             </div>
           </div>
         </div>
@@ -98,9 +99,11 @@ export default function Note() {
 
 
 
-        <div className="row">
+        <div className="row my-5">
             <h2>Your Notes</h2>
-
+            <div className="container mx-2">
+                {notes.length===0 && "No notes to Display"}
+            </div>
             {  
                 notes.map((note)=>{                                 //6️⃣ using map() we use Noteitem.js because in this we integrate the fetch_notes
                     return <Noteitem key={note._id} updatenote={updatenote} note={note}/>   //7️⃣.0️⃣ now we make Noteitem.js in which we send (each note of notes) -----====> go to Noteitem.js with(🛑note={note}7️⃣.1️⃣---------->
