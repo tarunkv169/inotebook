@@ -100,19 +100,19 @@ router.post('/createuser', [
         return res.status(400).json({ errors: errors.array() });
       }
   
-
+      let success = false;                                           //9️⃣.6️⃣ declare success=false   <------------------from login.js
       const {email,password} = req.body;              //⬇️ on body window ,we req user's email & password and store that  in var(email,password)
       try{
          const user = await User.findOne({email});                              // ➡️find the email
          if(!user)                                                              // if this email not exits
-         {
-             return res.status(400).json({error: "please enter the correct login credentials"});
+         {   
+             return res.status(400).json({success,error: "please enter the correct login credentials"});          //9️⃣.6️⃣.1️⃣ show success value with error as email not match
          }
           
          const password_compare = await bcrypt.compare(password,user.password); // ➡️compare the password by bcrpyting from salt 
          if(!password_compare)                                                  // if password not exits
-         {
-            return res.status(400).json({error: "please enter the correct login credentials"});
+         {   
+            return res.status(400).json({success,error: "please enter the correct login credentials"});          //9️⃣.6️⃣.2️⃣show success value with error as password not match after bcrypting
          }
          
          const data={
@@ -120,10 +120,11 @@ router.post('/createuser', [
               id: user.id
           }
          }
-
+         
          const authtoken = jwt.sign(data,JWT_SECRET);
-        
-         res.json({authtoken});
+         
+         success = true;                                                    //9️⃣.6️⃣.3️⃣ set success=true as it pass all obstacle now send success in res.json----------------->go to login.js9️⃣.7️⃣--->
+         res.json({success,authtoken});
          
       }
       catch(error){
