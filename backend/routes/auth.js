@@ -46,13 +46,13 @@ router.post('/createuser', [
     //     .catch(err=> {console.log(err)                                                            // 6. to stop duplicacy of data "add inotebook in mongoURI"  and "add user.createIndexes in User.js"
     //     res.json({error: 'please enter a unique value for email',message: err.message})})
 
-
+    let success = false;
     // checking wether user with email exists already
     try{
         let user = await User.findOne({email: req.body.email})
         if(user)
         {
-          return res.status(400).json({error: 'sorry user with this email already exists'})
+          return res.status(400).json({success,error: 'sorry user with this email already exists'})
         }
         
         const salt = await bcrypt.genSalt(10);
@@ -70,8 +70,8 @@ router.post('/createuser', [
         }
 
         const authtoken = jwt.sign(data,JWT_SECRET);
-
-        res.json({authtoken});
+        success = true
+        res.json({success,authtoken});
         // res.json(user);
         // res.json(rbp);
     }
