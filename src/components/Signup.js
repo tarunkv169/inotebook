@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
-export default function Signup() {
+export default function Signup(props) {
 
-  const [Credential,setCredential]=useState({name:"",email:"",password:"",cpassword:""});
+  const [Credential,setCredential]=useState({name:"",email:"",password:"",cpassword:""});           // same as login just here (/createuser) is used and get the user(name,cpassword extra)
   const navigate = useNavigate();
 
   const handlechange=(e)=>{
@@ -12,14 +12,14 @@ export default function Signup() {
 
   const handlesubmit=async(e)=>{
      e.preventDefault();
-     const {name,email,password} =  Credential;
+     const {name,email,password} =  Credential;                                                 // we can do like this also
      const response = await fetch("http://localhost:5000/api/auth/createuser",{
             method:"POST",
             headers:{
               "Content-Type":"application/json"
             },
 
-            body: JSON.stringify({name,email,password})
+            body: JSON.stringify({name,email,password})                                        //⬆️then here simpley write
       })
 
       const json = await response.json();
@@ -27,16 +27,18 @@ export default function Signup() {
 
       if(json.success){
         localStorage.setItem("token",json.authtoken);
+        props.showalert("Signup successfully","success");
         navigate('/');
       }
       else{
-        alert(" please enter correct credentials");
+        props.showalert("Invalid details","danger");
       }
   }
 
 
   return (
-    <div className='container'>
+    <div className='container my-4 mx-1'>
+      <h2>Create an account to use iNotebook</h2>
       <form onSubmit={handlesubmit}>
         <div className="mb-3">
           <label htmlFor="exampleInputEmail1" className="form-label">Name</label>
