@@ -7,9 +7,22 @@ import About from "./components/About";
 import NoteState from "./context/notes/NoteState";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
-
+import Alert from "./components/Alert";
+import { useState } from "react";
 
 function App() {
+
+  const [alerttt,setalerttt] = useState(null);
+
+  const showalert=(msg,type)=>
+  {
+      setalerttt({ msg: msg, type: type})
+
+      setTimeout(()=>{setalerttt(null)},1500)
+  }
+
+
+
   return (
     
     <div className="App">
@@ -17,11 +30,12 @@ function App() {
         <div className="container">
           <Router>
             <Navbar />
+            <Alert  alert={alerttt} />
             <Routes>
-              <Route path="/" element={<Home />}></Route>
+              <Route path="/" element={<Home showalert={showalert} />}></Route>
               <Route path="/About" element={<About />}></Route>
-              <Route path="/Login" element={<Login />}></Route>             
-              <Route path="/Signup" element={<Signup />}></Route>
+              <Route path="/Login" element={<Login showalert={showalert} />}></Route>             
+              <Route path="/Signup" element={<Signup showalert={showalert} />}></Route>
             </Routes>
           </Router>
         </div>
