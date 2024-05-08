@@ -1,12 +1,20 @@
 import React, { useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 export default function Navbar() {
   let location = useLocation();
   useEffect(() => {
     console.log(location.pathname)
   }, [location])
+  
 
+
+  const navigate = useNavigate();; 
+  const handlelogout=()=>{
+    localStorage.removeItem('token');
+    navigate('/login');
+
+  }
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -38,11 +46,11 @@ export default function Navbar() {
                     <Link className="nav-link disabled" to="/" tabIndex="-1" aria-disabled="true">Disabled</Link>
                   </li>
               </ul>
-              <form className="d-flex">                                                          
+              {!localStorage.getItem('token') ? <form className="d-flex">                                                          
                   <Link className="btn btn-primary mx-2" to="/login" role="button">Login</Link>
                   <Link className="btn btn-primary mx-2" to="/signup" role="button">SignUp</Link>
-              </form>
-          </div>
+              </form> : <button onClick={handlelogout} className='btn btn-primary mx-2'>Logout</button>}
+          </div>                
       </div>
    </nav>                                                                    //⬆️ 9️⃣.0️⃣ creating buttons------ then in components create comp(login and signup)-----go to 9️⃣.1️⃣in App.js do(put login and signup comp in Route)--->
   )
