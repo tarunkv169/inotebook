@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 
-export default function Login() {                                                     
+export default function Login(props) {                                                     
   
   const [Credential,setCredential]=useState({email:"",password:""});                 //9️⃣.3️⃣ credential initalize with empty email and password
   const navigate = useNavigate()
@@ -31,15 +31,17 @@ export default function Login() {
                                                                                     //------------------->9️⃣.6️⃣ go to backend>routes>auth 
      if(json.success){                                                              //🔚9️⃣.7️⃣ if true then store authtoken and navigate to our (/ or Home)  <-----------from auth.js
        localStorage.setItem("token",json.authtoken)
+       props.showalert("Login successfully","success");
        navigate('/')
      }
      else{
-       alert("Invalid user");
+       props.showalert("Invalid user","danger");
      }
   }
   
   return (                                                                   // 9️⃣.2️⃣inserting form and creating 🛑onChangefunc(in input)  and 🛑onSubmitfunc(in form)   <----------from App.js                   <-------------from App.js
     <div className='container my-4 mx-1'>
+      <h2>Login to use iNotebook</h2>
       <form onSubmit={handlesubmit}>                    
         <div className="mb-3">
           <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
