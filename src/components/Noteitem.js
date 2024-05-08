@@ -3,7 +3,7 @@ import noteContext from '../context/notes/noteContext';
 
 export default function Noteitem(props) {
     const {note,updatenote}=props;                         //7️⃣.1️⃣using (note of notes) we make card of note and 🛑getting id of this particular note  <------7️⃣.1️⃣---from Note.js------
-                                                     //8️⃣.2️⃣ using updatenote from props and put in edit icon
+                                                     //8️⃣.2️⃣ using updatenote from props and put in edit icon        <----------8️⃣.2️⃣-from Note.js---------
 
 
 
@@ -12,6 +12,7 @@ export default function Noteitem(props) {
     const handledelete=(e)=>{                    // 7️⃣.5️⃣ on click on delete icon ---passing (id of note) to deletenote() in NoteState.js-------->7️⃣.6️⃣------>NoteState.js
        e.preventDefault();
         deletenote(note._id);
+        props.showalert("Deleted successfully","success");
     }
 
 
