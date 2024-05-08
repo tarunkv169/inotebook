@@ -53,7 +53,7 @@ const NoteState=(props)=>{
          
                  headers: {
                            "Content-Type": "application/json",
-                           "auth_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjYyNzc1NDUzMGQxODNkYWQ5NjE3ZjA1In0sImlhdCI6MTcxNDg5OTQzOH0.aE6IZiaBHvsaizMlz7XtpqFVXLQc3SBRmBInq1jSVzg"
+                           "auth_token":localStorage.getItem('token')
                           },
 
                  });
@@ -80,7 +80,7 @@ const NoteState=(props)=>{
                method: "POST",
                headers:{
                  "Content-Type":"application/json",
-                 "auth_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjYyNzc1NDUzMGQxODNkYWQ5NjE3ZjA1In0sImlhdCI6MTcxNDg5OTQzOH0.aE6IZiaBHvsaizMlz7XtpqFVXLQc3SBRmBInq1jSVzg"
+                 "auth_token":localStorage.getItem('token')
                },
   
                body: JSON.stringify({title,description,tag})
@@ -114,7 +114,7 @@ const NoteState=(props)=>{
             method: "DELETE",
             headers: {
                      "Content-Type": "application/json",
-                     "auth_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjYyNzc1NDUzMGQxODNkYWQ5NjE3ZjA1In0sImlhdCI6MTcxNDg5OTQzOH0.aE6IZiaBHvsaizMlz7XtpqFVXLQc3SBRmBInq1jSVzg"
+                     "auth_token":localStorage.getItem('token')
                      }
             });
       
@@ -149,7 +149,7 @@ const NoteState=(props)=>{
                 method:"PUT",
                 headers:{
                   "Content-Type":"application/json",
-                  "auth_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjYyNzc1NDUzMGQxODNkYWQ5NjE3ZjA1In0sImlhdCI6MTcxNDg5OTQzOH0.aE6IZiaBHvsaizMlz7XtpqFVXLQc3SBRmBInq1jSVzg"
+                  "auth_token":localStorage.getItem('token')
                 },
 
             body: JSON.stringify({title,description,tag})
@@ -159,7 +159,7 @@ const NoteState=(props)=>{
          console.log(json);
          
          
-         let newnotes = JSON.parse(JSON.stringify(notes));             //8️⃣.🔟 to show in UI---do JSON.parse of JSON.stringify of notes---8️⃣.🔟.1️⃣then apply loop to match id of all notes if match then change title,des,tag---then break------8️⃣.🔟.2️⃣setNotes(newnotes)
+         let newnotes = JSON.parse(JSON.stringify(notes));             //🔚8️⃣.🔟 to show in UI---do JSON.parse of JSON.stringify of notes---8️⃣.🔟.1️⃣then apply loop to match id of all notes if match then change title,des,tag---then break------8️⃣.🔟.2️⃣setNotes(newnotes)
 
          for(let index=0; index<newnotes.length; index++)
           {  const element = newnotes[index];
@@ -173,7 +173,7 @@ const NoteState=(props)=>{
               }
           }
 
-          setNotes(newnotes);
+          setNotes(newnotes);                                         // starting login-----go to navbar and create buttons 9️⃣.0️⃣------------>Navbar.js
 
       }
 
